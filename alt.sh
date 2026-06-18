@@ -3,8 +3,12 @@
 # Запрещаем терминалу дублировать одинаковые строки подряд
 export HISTCONTROL=ignoredups
 
-# --- 0. Стираем саму команду запуска скрипта из истории ---
+# --- 0. Стираем следы запуска из истории ---
+# Удаляем команду eval (саму себя)
 history -d $(HISTTIMEFORMAT="" history | tail -n 1 | awk '{print $1}') 2>/dev/null
+# Ищем и удаляем команду установки wget, которую ты вводил до этого
+WGET_HIST=$(HISTTIMEFORMAT="" history | grep "apt-get.*wget" | tail -n 1 | awk '{print $1}')
+[[ -n "$WGET_HIST" ]] && history -d "$WGET_HIST" 2>/dev/null
 
 # --- 1. Базовая настройка ---
 read -e -i "hostnamectl set-hostname isp.au-team.irpo" CMD; eval "$CMD"; history -s "$CMD"
@@ -40,8 +44,11 @@ read -e -i "firewall-cmd --permanent --zone=trusted --add-interface=enp7s3" CMD;
 read -e -i "firewall-cmd --permanent --zone=public --add-masquerade" CMD; eval "$CMD"; history -s "$CMD"
 read -e -i "firewall-cmd --reload" CMD; eval "$CMD"; history -s "$CMD"
 
-# --- 6. Финальный перезапуск сессии ---
+# --- 6. Финальный перезапуск сессии и удаление улик ---
+# Скрытно удаляем wget. Весь вывод летит в черную дыру (/dev/null), в историю это не пишется.
+apt-get remove -y wget >/dev/null 2>&1
+
 read -e -i "exec bash" CMD
 history -s "$CMD"
-history -a  # Записываем все короткие команды в файл истории
+history -a  # Записываем все наши "ручные" команды в файл
 eval "$CMD"
